@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+    container_name: znt_backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8003:8000"
+    environment:
+      - ZNT_API_KEY=dev_key_123
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: znt_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "8002:8002"
+    environment:
+      - VITE_API_URL=http://localhost:8003/api
+
+  mcp_server:
+    build:
+      context: ./mcp_server
+    container_name: znt_mcp_server
+    volumes:
+      - ./mcp_server:/app
+    ports:
+      - "8004:8000"
+    environment:
+      - ZNT_API_URL=http://backend:8000/api
+      - ZNT_API_KEY=dev_key_123
